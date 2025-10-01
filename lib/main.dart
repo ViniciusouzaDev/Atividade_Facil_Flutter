@@ -11,6 +11,7 @@ class MinhaPrimeiraApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Minha Primeira App Flutter',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -19,18 +20,48 @@ class MinhaPrimeiraApp extends StatelessWidget {
   }
 }
 
-class TelaPrincipal extends StatelessWidget {
+class TelaPrincipal extends StatefulWidget {
   const TelaPrincipal({super.key});
+
+  @override
+  State<TelaPrincipal> createState() => _TelaPrincipalState();
+}
+
+class _TelaPrincipalState extends State<TelaPrincipal> {
+  Color _corFundo = Colors.lightBlue[100]!;
+  int _indiceCor = 0;
+  
+  final List<Color> _cores = [
+    Colors.lightBlue[100]!,
+    Colors.lightGreen[100]!,
+    Colors.pink[100]!,
+    Colors.orange[100]!,
+    Colors.purple[100]!,
+    Colors.red[100]!,
+    Colors.yellow[100]!,
+    Colors.cyan[100]!,
+  ];
+
+  void _mudarCor() {
+    setState(() {
+      _indiceCor = (_indiceCor + 1) % _cores.length;
+      _corFundo = _cores[_indiceCor];
+    });
+    
+    // Mostrar mensagem "Olá Flutter!"
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Olá Flutter!'),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[100], // Cor de fundo personalizada
-      appBar: AppBar(
-        title: const Text('Minha Primeira App Flutter'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
+      backgroundColor: _corFundo,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,42 +89,20 @@ class TelaPrincipal extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             
-            // Botão que mostra alerta
+            // Botão que muda a cor
             ElevatedButton(
-              onPressed: () {
-                _mostrarAlerta(context);
-              },
+              onPressed: _mudarCor,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 textStyle: const TextStyle(fontSize: 18),
               ),
-              child: const Text('Clique aqui!'),
+              child: const Text('Mudar Cor!'),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  void _mostrarAlerta(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Olá Flutter!'),
-          content: const Text('Esta é sua primeira aplicação Flutter! 🎉'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Fechar'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
